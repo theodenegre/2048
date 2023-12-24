@@ -52,6 +52,9 @@ class My2048:
             self.moveRight()
         else:
             raise ValueError("d must be in {Up, Down, Left, Right}")
+        if self.last_matrice != self.board:
+            self.spawn_number()
+            self.last_matrice = deepcopy(self.board)
 
     def moveUp(self):
         for i in range(self.size):
@@ -67,11 +70,6 @@ class My2048:
                     elif k + 1 != i:
                         self.board[k + 1][j] = self.board[i][j]
                         self.board[i][j] = 0
-        print(self.board)
-        print(self.last_matrice)
-        if self.last_matrice != self.board:
-            self.spawn_number()
-            self.last_matrice = deepcopy(self.board)
 
     def transpose(self):
         for i in range(self.size):
