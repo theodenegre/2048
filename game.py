@@ -24,6 +24,11 @@ class My2048:
             res += "\n"
         return res
 
+    def reset(self):
+        self.board = create_mat(self.size)
+        self.last_matrice = deepcopy(self.board)
+        self.score = 0
+
     def change_elem(self, x, y, val):
         self.board[y][x] = val
 
@@ -41,20 +46,19 @@ class My2048:
             self.spawn_number()
 
     def move(self, d):
+        temp = deepcopy(self.board)
         d = d.lower()
-        if d == "up":
-            self.moveUp()
-        elif d == "down":
-            self.moveDown()
-        elif d == "left":
-            self.moveLeft()
-        elif d == "right":
-            self.moveRight()
+        dic = {"up"   : self.moveUp,
+               "down": self.moveDown,
+               "left" : self.moveLeft,
+               "right": self.moveRight}
+        if d in dic:
+            dic[d]()
         else:
             raise ValueError("d must be in {Up, Down, Left, Right}")
-        if self.last_matrice != self.board:
+        if temp != self.board:
             self.spawn_number()
-            self.last_matrice = deepcopy(self.board)
+            self.last_matrice = deepcopy(temp)
 
     def moveUp(self):
         for i in range(self.size):
@@ -116,6 +120,11 @@ class My2048:
                 if self.board[i][j] == 2048:
                     return True
         return False
+
+    def rollback(self):
+        self.board = deepcopy(self.last_matrice)
+        self.last_matrice = deepcopy(self.board)
+
 
 if __name__ == "__main__":
     game = My2048(4)

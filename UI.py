@@ -29,6 +29,7 @@ colors = {
 game = My2048(size=4)
 game.start()
 
+
 # make the grid of the game
 for i in range(game.size):
     for j in range(game.size):
@@ -51,29 +52,24 @@ pressed_key = StringVar()
 def on_key_press(event):
     pressed_key.set(event.keysym)
 
-root.bind("<Key>", on_key_press)
 
-while True:
-    root.update()
+def handle_lose():
     if game.is_over():
-        break
-    if game.is_win():
-        break
+        print("Game Over")
+        game.reset()
+        game.start()
+        update()
 
-    # Wait for a key to be pressed
-    root.wait_variable(pressed_key)
-    game.move(pressed_key.get())
-    # Clear the pressed key for the next iteration
-    pressed_key.set("")
 
+def update():
     for i in range(game.size):
         for j in range(game.size):
             padding = 5
             frame = Frame(root,
                           width=(WIDTH - (
-                                      2 * game.size * padding)) / game.size,
+                                  2 * game.size * padding)) / game.size,
                           height=(HEIGHT - (
-                                      2 * game.size * padding)) / game.size,
+                                  2 * game.size * padding)) / game.size,
                           bg=colors[game.board[i][j]])
             frame.grid(row=i, column=j, padx=5, pady=5)
             label = Label(root, text=game.board[i][j],
@@ -81,4 +77,41 @@ while True:
                           bg=colors[game.board[i][j]], fg="#776e65")
             label.grid(row=i, column=j, padx=5, pady=5)
 
+
+def rollback():
+    game.rollback()
+    update()
+
+
+# add rollback in menu
+menubar = Menu(root)
+menubar.add_command(label="Rollback", command=rollback)
+root.config(menu=menubar)
+
+
+root.bind("<Key>", on_key_press)
+
+
+def handle_win():
+    if game.is_win():
+        print("You win")
+
+
+def main():
+    while True:
+        root.update()
+        handle_lose()
+        handle_win()
+
+        # Wait for a key to be pressed
+        root.wait_variable(pressed_key)
+        game.move(pressed_key.get())
+        # Clear the pressed key for the next iteration
+        pressed_key.set("")
+
+        # Update the grid
+        update()
+
+
+main()
 root.mainloop()
