@@ -44,9 +44,6 @@ def init():
                           bg=colors[game.board[i][j]], fg="#776e65")
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-# Create a StringVar to store the pressed key
-pressed_key = StringVar()
-
 
 def on_key_press(event):
     pressed_key.set(event.keysym)
