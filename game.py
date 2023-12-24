@@ -36,10 +36,13 @@ class My2048:
         return self.board[y][x]
 
     def spawn_number(self):
+        to_spawn = 2
+        if randint(0, 9) == 0: # 10% chance to spawn a 4
+            to_spawn = 4
         x, y = randint(0, self.size - 1), randint(0, self.size - 1)
         while self.get_elem(x, y) != 0:
             x, y = randint(0, self.size - 1), randint(0, self.size - 1)
-        self.change_elem(x, y, 2)
+        self.change_elem(x, y, to_spawn)
 
     def start(self):
         for _ in range(ceil(self.size ** 0.5)):
