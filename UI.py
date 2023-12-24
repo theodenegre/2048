@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+
 from game import My2048
 
 root = Tk()
@@ -30,25 +30,24 @@ game = My2048(size=4)
 game.start()
 
 
-# make the grid of the game
-for i in range(game.size):
-    for j in range(game.size):
-        padding = 5
-        frame = Frame(root,
-                      width=(WIDTH - (2 * game.size * padding)) / game.size,
-                      height=(HEIGHT - (2 * game.size * padding)) / game.size,
-                      bg=colors[game.board[i][j]])
-        frame.grid(row=i, column=j, padx=5, pady=5)
-        label = Label(frame, text=game.board[i][j],
-                      font=("Arial", 40, "bold"),
-                      bg=colors[game.board[i][j]], fg="#776e65")
-        label.place(relx=0.5, rely=0.5, anchor=CENTER)
+def init():
+    for i in range(game.size):
+        for j in range(game.size):
+            padding = 5
+            frame = Frame(root,
+                          width=(WIDTH - (2 * game.size * padding)) / game.size,
+                          height=(HEIGHT - (2 * game.size * padding)) / game.size,
+                          bg=colors[game.board[i][j]])
+            frame.grid(row=i, column=j, padx=5, pady=5)
+            label = Label(frame, text=game.board[i][j],
+                          font=("Arial", 40, "bold"),
+                          bg=colors[game.board[i][j]], fg="#776e65")
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # Create a StringVar to store the pressed key
 pressed_key = StringVar()
 
 
-# Function to handle key press events
 def on_key_press(event):
     pressed_key.set(event.keysym)
 
@@ -61,21 +60,23 @@ def handle_lose():
         update()
 
 
-def update():
+def update():  # Bug at random moments
+    for widget in root.winfo_children():
+        if isinstance(widget, Frame) or isinstance(widget, Label):
+            widget.destroy()
     for i in range(game.size):
         for j in range(game.size):
             padding = 5
             frame = Frame(root,
-                          width=(WIDTH - (
-                                  2 * game.size * padding)) / game.size,
-                          height=(HEIGHT - (
-                                  2 * game.size * padding)) / game.size,
+                          width=(WIDTH - (2 * game.size * padding)) / game.size,
+                          height=(HEIGHT - (2 * game.size * padding)) / game.size,
                           bg=colors[game.board[i][j]])
             frame.grid(row=i, column=j, padx=5, pady=5)
-            label = Label(root, text=game.board[i][j],
+            label = Label(frame, text=game.board[i][j],
                           font=("Arial", 40, "bold"),
                           bg=colors[game.board[i][j]], fg="#776e65")
-            label.grid(row=i, column=j, padx=5, pady=5)
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
+    root.update()
 
 
 def rollback():
@@ -83,35 +84,33 @@ def rollback():
     update()
 
 
-# add rollback in menu
-menubar = Menu(root)
-menubar.add_command(label="Rollback", command=rollback)
-root.config(menu=menubar)
-
-
-root.bind("<Key>", on_key_press)
-
-
 def handle_win():
     if game.is_win():
         print("You win")
 
 
+pressed_key = StringVar()
+# add rollback in menu
+menubar = Menu(root)
+menubar.add_command(label="Rollback", command=rollback)
+root.config(menu=menubar)
+
+root.bind("<Key>", on_key_press)
+
+
 def main():
+    init()
     while True:
         root.update()
         handle_lose()
         handle_win()
-
-        # Wait for a key to be pressed
         root.wait_variable(pressed_key)
         game.move(pressed_key.get())
-        # Clear the pressed key for the next iteration
         pressed_key.set("")
-
-        # Update the grid
         update()
 
 
-main()
-root.mainloop()
+if __name__ == "__main__":
+    main()
+    print("test")
+    root.mainloop()
