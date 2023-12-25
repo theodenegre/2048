@@ -118,15 +118,34 @@ class My2048:
         return True
 
     def is_win(self):
-        for i in range(self.size):
-            for j in range(self.size):
-                if self.board[i][j] == 2048:
-                    return True
-        return False
+        if self.won:
+            return True
+        for line in self.board:
+            if 2048 in line:
+                self.won = True
+                print("You won!")
+                return True
 
     def rollback(self):
         self.board = deepcopy(self.last_matrice)
         self.last_matrice = deepcopy(self.board)
+
+
+    def can_move(self, d):
+        temp = deepcopy(self.board)
+        d = d.lower()
+        dic = {"up"   : self.moveUp,
+               "down": self.moveDown,
+               "left" : self.moveLeft,
+               "right": self.moveRight}
+        if d in dic:
+            dic[d]()
+        else:
+            raise ValueError("d must be in {Up, Down, Left, Right}")
+        if temp != self.board:
+            self.last_matrice = deepcopy(temp)
+            return True
+        return False
 
 
 if __name__ == "__main__":
@@ -138,8 +157,10 @@ if __name__ == "__main__":
          [2, 0, 2, 0]]
     print(game)
 
-    for move in ["Down", "Left", "Up", "Right"]:
-        game.move(move)
-        print(game)
-        print("Score:", game.score)
-        print("")
+    # for move in ["Down", "Left", "Up", "Right"]:
+    #     game.move(move)
+    #     print(game)
+    #     print("Score:", game.score)
+    #     print("")
+    game.move("left")
+    print(game)

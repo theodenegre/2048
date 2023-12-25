@@ -52,6 +52,12 @@ def on_key_press(event):
 def handle_lose():
     if game.is_over():
         print("Game Over")
+        print("Score:", game.score)
+        maxx = 0
+        for line in game.board:
+            for elem in line:
+                maxx = max(maxx, elem)
+        print("Max:", maxx)
         game.reset()
         game.start()
         update()
@@ -81,9 +87,8 @@ def rollback():
     update()
 
 
-def handle_win():
-    if game.is_win():
-        print("You win")
+def handle_win(): # TODO
+    game.is_win()
 
 
 pressed_key = StringVar()
