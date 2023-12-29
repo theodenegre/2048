@@ -8,7 +8,7 @@ WIDTH = 780
 HEIGHT = 780
 root.geometry(f"{WIDTH}x{HEIGHT}")
 root.resizable(False, False)
-root.config(bg="#faf8ef")
+root.config(bg="#FBC02D")
 
 colors = {
     0   : "#cdc1b4",
@@ -25,6 +25,20 @@ colors = {
     2048: "#edc22e",
     4096: "#3c3a32"
 }
+mycolors = {
+    0 : "#F9A825",
+    2   : "#FF8F00",
+    4   : "#F57F17",
+    8   : "#FF6F00",
+    16  : "#FFA000",
+    32  : "#E65100",
+    64  : "#FF7043",
+    128 : "#FF5722",
+    256 : "#D84315",
+    512 : "#F44336",
+    1024: "#C62828",
+    2048: "#BF360C"
+}
 
 game = My2048(size=4)
 game.start()
@@ -37,11 +51,11 @@ def init():
             frame = Frame(root,
                           width=(WIDTH - (2 * game.size * padding)) / game.size,
                           height=(HEIGHT - (2 * game.size * padding)) / game.size,
-                          bg=colors[game.board[i][j]])
+                          bg=mycolors[game.board[i][j]])
             frame.grid(row=i, column=j, padx=5, pady=5)
             label = Label(frame, text=game.board[i][j],
                           font=("Arial", 40, "bold"),
-                          bg=colors[game.board[i][j]], fg="#776e65")
+                          bg=mycolors[game.board[i][j]], fg="#776e65")
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 
@@ -73,11 +87,11 @@ def update():  # Bug at random moments
             frame = Frame(root,
                           width=(WIDTH - (2 * game.size * padding)) / game.size,
                           height=(HEIGHT - (2 * game.size * padding)) / game.size,
-                          bg=colors[game.board[i][j]])
+                          bg=mycolors[game.board[i][j]])
             frame.grid(row=i, column=j, padx=5, pady=5)
             label = Label(frame, text=game.board[i][j],
                           font=("Arial", 40, "bold"),
-                          bg=colors[game.board[i][j]], fg="#776e65")
+                          bg=mycolors[game.board[i][j]], fg="#776e65")
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
     root.update()
 
