@@ -21,8 +21,8 @@ colors = {
     512: "#edc850",
     1024: "#edc53f",
     2048: "#edc22e",
-    4096: "#3c3a32"
 }
+
 mycolors = {
     0: "#F9A825",
     2: "#FF8F00",
@@ -42,21 +42,8 @@ game = My2048(size=4)
 game.start()
 
 
-def init():
-    for i in range(game.size):
-        for j in range(game.size):
-            padding = 5
-            frame = Frame(root,
-                          width=(WIDTH - (2 * game.size * padding)) / game.size,
-                          height=(HEIGHT - (
-                                      2 * game.size * padding)) / game.size,
-                          bg=mycolors[game.board[i][j]])
-            frame.grid(row=i, column=j, padx=5, pady=5)
-            if game.board[i][j] != 0:
-                label = Label(frame, text=game.board[i][j],
-                              font=("Arial", 40, "bold"),
-                              bg=mycolors[game.board[i][j]], fg="#776e65")
-                label.place(relx=0.5, rely=0.5, anchor=CENTER)
+def init(color_palette=None):
+    update(color_palette)
 
 
 def on_key_press(event):
@@ -67,33 +54,32 @@ def handle_lose():
     if game.is_over():
         print("Game Over")
         print("Score:", game.score)
-        maxx = 0
-        for line in game.board:
-            for elem in line:
-                maxx = max(maxx, elem)
-        print("Max:", maxx)
+        print("Max:", max(max(line) for line in game.board))
         game.reset()
         game.start()
         update()
 
 
-def update():  # Bug at random moments
+def update(color_palette=None):
+    if color_palette is None:
+        color_palette = mycolors
     for widget in root.winfo_children():
         if isinstance(widget, Frame) or isinstance(widget, Label):
             widget.destroy()
     for i in range(game.size):
         for j in range(game.size):
             padding = 5
+            color = color_palette[game.board[i][j]]
             frame = Frame(root,
                           width=(WIDTH - (2 * game.size * padding)) / game.size,
                           height=(HEIGHT - (
-                                      2 * game.size * padding)) / game.size,
-                          bg=mycolors[game.board[i][j]])
+                                  2 * game.size * padding)) / game.size,
+                          bg=color)
             frame.grid(row=i, column=j, padx=5, pady=5)
             if game.board[i][j] != 0:
                 label = Label(frame, text=game.board[i][j],
                               font=("Arial", 40, "bold"),
-                              bg=mycolors[game.board[i][j]], fg="#776e65")
+                              bg=color, fg="#776e65")
                 label.place(relx=0.5, rely=0.5, anchor=CENTER)
     root.update()
 
