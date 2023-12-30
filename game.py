@@ -28,6 +28,7 @@ class My2048:
         self.board = create_mat(self.size)
         self.last_matrice = deepcopy(self.board)
         self.score = 0
+        self.start()
 
     def change_elem(self, x, y, val):
         self.board[y][x] = val
@@ -37,7 +38,7 @@ class My2048:
 
     def spawn_number(self):
         to_spawn = 2
-        if randint(0, 9) == 0: # 10% chance to spawn a 4
+        if randint(0, 9) == 0:  # 10% chance to spawn a 4
             to_spawn = 4
         x, y = randint(0, self.size - 1), randint(0, self.size - 1)
         while self.get_elem(x, y) != 0:
@@ -51,9 +52,9 @@ class My2048:
     def move(self, d):
         temp = deepcopy(self.board)
         d = d.lower()
-        dic = {"up"   : self.moveUp,
+        dic = {"up": self.moveUp,
                "down": self.moveDown,
-               "left" : self.moveLeft,
+               "left": self.moveLeft,
                "right": self.moveRight}
         if d in dic:
             dic[d]()
@@ -130,13 +131,12 @@ class My2048:
         self.board = deepcopy(self.last_matrice)
         self.last_matrice = deepcopy(self.board)
 
-
     def can_move(self, d):
         temp = deepcopy(self.board)
         d = d.lower()
-        dic = {"up"   : self.moveUp,
+        dic = {"up": self.moveUp,
                "down": self.moveDown,
-               "left" : self.moveLeft,
+               "left": self.moveLeft,
                "right": self.moveRight}
         if d in dic:
             dic[d]()
