@@ -6,6 +6,7 @@ root = Tk()
 root.title("2048")
 WIDTH = HEIGHT = 500
 root.geometry(f"{WIDTH}x{HEIGHT}")
+root.resizable(False, False)
 root.config(bg="#FBC02D")
 
 colors = {
@@ -21,6 +22,7 @@ colors = {
     512: "#edc850",
     1024: "#edc53f",
     2048: "#edc22e",
+    4096: "#3c3a32"
 }
 
 mycolors = {
@@ -35,7 +37,8 @@ mycolors = {
     256: "#D84315",
     512: "#F44336",
     1024: "#C62828",
-    2048: "#BF360C"
+    2048: "#BF360C",
+    4096: "#3c3a32"
 }
 
 game = My2048(size=4)
@@ -69,7 +72,10 @@ def update(color_palette=None):
     for i in range(game.size):
         for j in range(game.size):
             padding = 5
-            color = color_palette[game.board[i][j]]
+            if game.board[i][j] >= 4096:
+                color = color_palette[4096]
+            else:
+                color = color_palette[game.board[i][j]]
             frame = Frame(root,
                           width=(WIDTH - (2 * game.size * padding)) / game.size,
                           height=(HEIGHT - (
