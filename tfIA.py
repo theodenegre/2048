@@ -65,7 +65,7 @@ def play_model(name: str):
         game.spawn_number()
 
 
-def humain_train_model(name: str, nbr_coups=100, nbr_partie = 3):
+def humain_train_model(name: str, nbr_coups=100, nbr_partie=3):
     dico = {'Up': 0, 'Down': 1, 'Left': 2, 'Right': 3}
     x, y = [], []
     for i in range(nbr_partie):
@@ -94,7 +94,9 @@ def self_train_model(nbr_partie=20, style=None):  # Pas ouf
             handle_lose()
             handle_win()
             boards.append(deepcopy(game.board))
-            for move in sorted(enumerate(model.predict(np.array([game.board]), verbose=0)[0]), key=lambda a: a[1],
+            for move in sorted(enumerate(
+                    model.predict(np.array([game.board]), verbose=0)[0]),
+                               key=lambda a: a[1],
                                reverse=True):
                 if game.can_move(dico[move[0]]):
                     game.move(dico[move[0]])
@@ -102,11 +104,12 @@ def self_train_model(nbr_partie=20, style=None):  # Pas ouf
                     break
             game.spawn_number()
             update()
-        model.fit(np.array(boards), np.array(moves), epochs=len(boards), batch_size=32)
+        model.fit(np.array(boards), np.array(moves), epochs=len(boards),
+                  batch_size=32)
     model.save_weights("self.h5")
 
 
 if __name__ == "__main__":
-    self_train_model(style="theostyle")
-    # play_model("self")
-
+    # self_train_model(style="theostyle")
+    # humain_train_model("theostyle", nbr_coups=30, nbr_partie=1)
+    play_model("theostyle")

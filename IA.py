@@ -1,5 +1,6 @@
 from random import choice
 from UI import *
+from time import sleep
 
 possible_moves = ["up", "down", "left", "right"]
 
@@ -79,7 +80,6 @@ def main(IA):
         handle_lose()
         IA()
         update()
-
 
 
 if __name__ == '__main__':
