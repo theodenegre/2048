@@ -91,15 +91,17 @@ def self_train_model(nbr_partie=10, nbr_epoch=10):
             if os.path.exists('self.h5'):
                 model.load_weights('self.h5')
             # modify a bit the weights
-            if i <= nbr_partie * 0.8:
-                multiplier = 0.1
+            if i == 0:
+                change = 0
+            elif i <= nbr_partie * 0.8:
+                change = 10
             else:
-                multiplier = 0.5
+                change = 100
             for layer in model.layers:
                 if layer.name == 'dense':
                     for i in range(len(layer.get_weights()[0])):
                         for j in range(len(layer.get_weights()[0][i])):
-                            layer.get_weights()[0][i][j] *= random.uniform(-multiplier, multiplier)
+                            layer.get_weights()[0][i][j] += random.normalvariate(-change, change)
             game.start()
             all_x = []
             all_y = []
@@ -142,6 +144,6 @@ def self_train_model(nbr_partie=10, nbr_epoch=10):
 
 
 if __name__ == "__main__":
-    self_train_model(3, 10)
+    self_train_model(10, 1000)
     # humain_train_model("theostyle", nbr_coups=30, nbr_partie=1)
     # play_model("theostyle")
