@@ -15,6 +15,8 @@ class My2048:
         self.start()
         self.won = False
         self.score = 0
+        self.nbr_move = 0
+        self.best_tile = 0
 
     def __str__(self):
         res = ""
@@ -63,6 +65,7 @@ class My2048:
         if temp != self.board:
             self.spawn_number()
             self.last_matrice = deepcopy(temp)
+            self.nbr_move += 1
 
     def moveUp(self):
         for i in range(self.size):
@@ -75,6 +78,7 @@ class My2048:
                         self.board[k][j] *= 2
                         self.board[i][j] = 0
                         self.score += self.board[k][j]
+                        self.best_tile = max(self.best_tile, self.board[k][j])
                     elif k + 1 != i:
                         self.board[k + 1][j] = self.board[i][j]
                         self.board[i][j] = 0
