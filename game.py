@@ -1,6 +1,6 @@
 from copy import deepcopy
-from math import ceil
-from random import randint
+from math import ceil, log2
+from random import randint, choice
 
 
 def create_mat(size):
@@ -9,14 +9,14 @@ def create_mat(size):
 
 class My2048:
     def __init__(self, size):
-        self.size = size
-        self.board = create_mat(self.size)
-        self.last_matrice = deepcopy(self.board)
-        self.start()
         self.won = False
         self.score = 0
         self.nbr_move = 0
         self.best_tile = 0
+        self.size = size
+        self.board = create_mat(self.size)
+        self.last_matrice = deepcopy(self.board)
+        self.start()
 
     def __str__(self):
         res = ""
@@ -30,6 +30,8 @@ class My2048:
         self.board = create_mat(self.size)
         self.last_matrice = deepcopy(self.board)
         self.score = 0
+        self.nbr_move = 0
+        self.best_tile = 0
         self.start()
 
     def change_elem(self, x, y, val):
@@ -38,14 +40,27 @@ class My2048:
     def get_elem(self, x, y):
         return self.board[y][x]
 
-    def spawn_number(self):
-        to_spawn = 2
-        if randint(0, 9) == 0:  # 10% chance to spawn a 4
-            to_spawn = 4
-        x, y = randint(0, self.size - 1), randint(0, self.size - 1)
-        while self.get_elem(x, y) != 0:
-            x, y = randint(0, self.size - 1), randint(0, self.size - 1)
-        self.change_elem(x, y, to_spawn)
+    def spawn_number(self, fixedRandom=True):
+        empty = []
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.board[i][j] == 0:
+                    empty.append((i, j))
+        if len(empty) == 0:
+            return
+        if not fixedRandom:
+            to_spawn = 2
+            if randint(0, 9) == 0:  # 10% chance to spawn a 4
+                to_spawn = 4
+            x, y = choice(empty)
+            self.change_elem(x, y, to_spawn)
+        else:
+            x, y = empty[(empty[self.size % len(empty)][0] * 2 + empty[int(log2(self.best_tile + 1)) % len(empty)][1] * 3) % len(empty)]
+            to_spawn = 2
+            if empty[0][0] % 2 and empty[-1][0] % 5:
+                to_spawn = 4
+            self.board[x][y] = to_spawn
+
 
     def start(self):
         for _ in range(ceil(self.size ** 0.5)):
@@ -60,12 +75,12 @@ class My2048:
                "right": self.moveRight}
         if d in dic:
             dic[d]()
+            if temp != self.board:
+                self.spawn_number()
+                self.last_matrice = deepcopy(temp)
+                self.nbr_move += 1
         else:
             raise ValueError("d must be in {Up, Down, Left, Right}")
-        if temp != self.board:
-            self.spawn_number()
-            self.last_matrice = deepcopy(temp)
-            self.nbr_move += 1
 
     def moveUp(self):
         for i in range(self.size):
